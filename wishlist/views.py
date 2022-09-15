@@ -25,9 +25,8 @@ def show_json(request):
 
 def show_json_by_id(request, id):
     data = BarangWishlist.objects.filter(pk=id)
-    if id == 1:
-        return HttpResponse(serializers.serialize("json", data), content_type="application/json")
-    if id == 2:
-        return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
-    if id == 3:
-        return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def show_xml_by_id(request, id):
+    data = BarangWishlist.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
