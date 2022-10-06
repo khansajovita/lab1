@@ -2,6 +2,53 @@
  
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.getJSON("{% url 'wishlist:show_json' %}") , function(data){
+            item = '';
+            $.each(data, function (key, value) {
+                item += '<tr>';
+                item += '<td>' + 
+                    value.fields.nama_barang + '</td>';
+                item += '<td>' + 
+                    value.fields.harga_barang + '</td>';
+                item += '<td>' + 
+                    value.fields.deskripsi + '</td>';
+                item += '</tr>';
+            });
+            $('#1').append(item);
+        });
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                  "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
+                }
+            })
+        });
+        $("#submit").click(function(){
+            alert("submitting!");
+            $.post("{% url 'wishlist:submit_ajax' %}", $('#item_data').serialize(), function(){
+                $(location).attr('href', "{% url 'wishlist:wishlist_ajax' %}");
+            });
+        });
+        $("#new-item").click(function(){
+            $(location).attr('href',"{% url 'wishlist:submit_ajax' %}");
+        });
+        $("#bonus").click(function() {
+            if(typeof(Storage) !== "undefined") {
+                if (localStorage.clickcount) {
+                    localStorage.clickcount = Number(localStorage.clickcount)+1;
+                } else {
+                    localStorage.clickcount = 1;
+                }
+                document.getElementById("result").innerHTML = "You have clicked the button " + localStorage.clickcount + " time(s).";
+            } else {
+                document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
+            }
+        });
+</script>
+  
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">{{ nama }}</a>
